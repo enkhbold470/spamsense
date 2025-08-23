@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { defaultNavItems } from "@/lib/navItems"
+import Image from "next/image"
 
 const sidebarVariants = cva(
   "fixed left-0 top-0 z-50 h-screen w-72 glass-primary border-r transition-all duration-300",
@@ -104,8 +105,8 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
             className="flex items-center gap-3 mb-8 px-2"
             animate={{ justifyContent: isCollapsed ? "center" : "flex-start" }}
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-trust-blue to-energy-orange rounded-lg flex items-center justify-center text-white font-bold text-sm glow-blue">
-              S
+            <div className="w-8 h-8 bg-gradient-to-br from-trust-blue to-energy-orange rounded-full flex items-center justify-center text-white font-bold text-sm glow-blue">
+              <Image src="/logo.svg" alt="Spamsense" width={40} height={40} />
             </div>
             
             <motion.span
