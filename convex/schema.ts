@@ -2,120 +2,30 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  // Contacts table
-  contacts: defineTable({
-    name: v.optional(v.string()),
-    phoneNumber: v.string(),
-    isWhitelisted: v.boolean(),
-    isBlocked: v.boolean(),
-    lastCallDate: v.optional(v.string()), // ISO date string
-    callCount: v.number(),
-    type: v.union(v.literal("personal"), v.literal("business")),
-    notes: v.optional(v.string()),
-  })
-    .index("by_phone", ["phoneNumber"])
-    .index("by_type", ["type"])
-    .index("by_whitelist", ["isWhitelisted"])
-    .index("by_blocked", ["isBlocked"]),
-
-  // Calls table
-  calls: defineTable({
-    phoneNumber: v.string(),
-    contactId: v.optional(v.id("contacts")),
-    type: v.union(v.literal("personal"), v.literal("business")),
-    status: v.union(
-      v.literal("allowed"),
-      v.literal("blocked"),
-      v.literal("spam"),
-      v.literal("unknown")
-    ),
-    duration: v.number(), // in seconds
-    timestamp: v.string(), // ISO date string
-    isSpam: v.boolean(),
-    confidence: v.number(), // 0-100 spam confidence
-    location: v.optional(v.string()),
-    carrierInfo: v.optional(v.string()),
-    action: v.optional(
-      v.union(
-        v.literal("allow"),
-        v.literal("block"),
-        v.literal("mark_spam"),
-        v.literal("whitelist")
-      )
-    ),
-    notes: v.optional(v.string()),
-    // Transcript and summary references
-    hasTranscript: v.optional(v.boolean()),
-    hasSummary: v.optional(v.boolean()),
-    transcriptStatus: v.optional(v.union(
-      v.literal("pending"),
-      v.literal("processing"),
-      v.literal("completed"),
-      v.literal("failed")
-    )),
-  })
-    .index("by_phone", ["phoneNumber"])
-    .index("by_contact", ["contactId"])
-    .index("by_type", ["type"])
-    .index("by_status", ["status"])
-    .index("by_spam", ["isSpam"])
-    .index("by_timestamp", ["timestamp"])
-    .index("by_confidence", ["confidence"]),
-
-  // Spam Rules table
-  spamRules: defineTable({
-    name: v.string(),
-    pattern: v.string(), // regex pattern
-    isActive: v.boolean(),
-    confidence: v.number(),
-    description: v.string(),
-  })
-    .index("by_active", ["isActive"])
-    .index("by_confidence", ["confidence"]),
-
-  // AI Insights table
-  insights: defineTable({
-    type: v.union(
-      v.literal("warning"),
-      v.literal("info"),
-      v.literal("success"),
-      v.literal("recommendation")
-    ),
-    message: v.string(),
-    confidence: v.number(),
-    actionable: v.boolean(),
-    createdAt: v.optional(v.string()), // ISO date string
-    isRead: v.optional(v.boolean()),
-  })
-    .index("by_type", ["type"])
-    .index("by_actionable", ["actionable"])
-    .index("by_read", ["isRead"]),
-
-  // Call Transcripts
-  transcripts: defineTable({
-    callId: v.id("calls"),
-    transcript: v.array(v.object({
-      role: v.union(v.literal("agent"), v.literal("user")),
-      response: v.string(),
-      timestamp: v.optional(v.string()), // ISO date string
-      confidence: v.optional(v.number()), // Speech-to-text confidence
-    })),
-    fullTranscript: v.optional(v.string()), // Combined full text
-    language: v.optional(v.string()),
-    duration: v.optional(v.number()), // transcript duration in seconds
-    createdAt: v.string(), // ISO date string
-  })
-    .index("by_call", ["callId"]),
-
-  // Call Summaries and Intent Analysis
+  callStats: defineTable({
+    allowedCalls: v.float64(),
+    avgCallDuration: v.float64(),
+    blockedCalls: v.float64(),
+    businessCalls: v.float64(),
+    calculatedAt: v.string(),
+    callsChange: v.float64(),
+    personalCalls: v.float64(),
+    spamBlocked: v.float64(),
+    spamChange: v.float64(),
+    spamPercentage: v.float64(),
+    topSpamNumbers: v.array(v.string()),
+    totalCalls: v.float64(),
+  }),
   callSummaries: defineTable({
+    actionItems: v.optional(v.array(v.string())),
+    aiModel: v.optional(v.string()),
     callId: v.id("calls"),
-    transcriptId: v.optional(v.id("transcripts")),
-    summary: v.string(),
+    createdAt: v.string(),
+    followUpRequired: v.boolean(),
     intent: v.object({
-      primary: v.string(), // e.g., "sales", "support", "spam", "personal"
-      confidence: v.number(), // 0-100
+      confidence: v.float64(),
       keywords: v.array(v.string()),
+      primary: v.string(),
       sentiment: v.union(
         v.literal("positive"),
         v.literal("negative"),
@@ -128,36 +38,122 @@ export default defineSchema({
       ),
     }),
     keyPoints: v.array(v.string()),
-    actionItems: v.optional(v.array(v.string())),
-    followUpRequired: v.boolean(),
-    satisfactionScore: v.optional(v.number()), // 1-10
-    createdAt: v.string(), // ISO date string
-    aiModel: v.optional(v.string()), // Which AI model generated the summary
+    satisfactionScore: v.optional(v.float64()),
+    summary: v.string(),
+    transcriptId: v.optional(v.id("transcripts")),
   })
     .index("by_call", ["callId"])
+    .index("by_follow_up", ["followUpRequired"])
     .index("by_intent", ["intent.primary"])
-    .index("by_sentiment", ["intent.sentiment"])
-    .index("by_follow_up", ["followUpRequired"]),
-
-  // Call Statistics (aggregated data)
-  callStats: defineTable({
-    totalCalls: v.number(),
-    personalCalls: v.number(),
-    businessCalls: v.number(),
-    spamBlocked: v.number(),
-    spamPercentage: v.number(),
-    allowedCalls: v.number(),
-    blockedCalls: v.number(),
-    avgCallDuration: v.number(),
-    topSpamNumbers: v.array(v.string()),
-    callsChange: v.number(),
-    spamChange: v.number(),
-    calculatedAt: v.string(), // ISO date string when stats were calculated
-  }),
-
-  // Legacy tasks table (keeping for existing functionality)
+    .index("by_sentiment", ["intent.sentiment"]),
+  calls: defineTable({
+    action: v.optional(
+      v.union(
+        v.literal("allow"),
+        v.literal("block"),
+        v.literal("mark_spam"),
+        v.literal("whitelist")
+      )
+    ),
+    carrierInfo: v.optional(v.string()),
+    confidence: v.float64(),
+    contactId: v.optional(v.id("contacts")),
+    duration: v.float64(),
+    hasSummary: v.optional(v.boolean()),
+    hasTranscript: v.optional(v.boolean()),
+    isSpam: v.boolean(),
+    location: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    phoneNumber: v.string(),
+    status: v.union(
+      v.literal("allowed"),
+      v.literal("blocked"),
+      v.literal("spam"),
+      v.literal("unknown")
+    ),
+    timestamp: v.string(),
+    transcriptStatus: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("processing"),
+        v.literal("completed"),
+        v.literal("failed")
+      )
+    ),
+    type: v.union(
+      v.literal("personal"),
+      v.literal("business")
+    ),
+  })
+    .index("by_confidence", ["confidence"])
+    .index("by_contact", ["contactId"])
+    .index("by_phone", ["phoneNumber"])
+    .index("by_spam", ["isSpam"])
+    .index("by_status", ["status"])
+    .index("by_timestamp", ["timestamp"])
+    .index("by_type", ["type"]),
+  contacts: defineTable({
+    callCount: v.float64(),
+    isBlocked: v.boolean(),
+    isWhitelisted: v.boolean(),
+    lastCallDate: v.optional(v.string()),
+    name: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    phoneNumber: v.string(),
+    type: v.union(
+      v.literal("personal"),
+      v.literal("business")
+    ),
+  })
+    .index("by_blocked", ["isBlocked"])
+    .index("by_phone", ["phoneNumber"])
+    .index("by_type", ["type"])
+    .index("by_whitelist", ["isWhitelisted"]),
+  insights: defineTable({
+    actionable: v.boolean(),
+    confidence: v.float64(),
+    createdAt: v.optional(v.string()),
+    isRead: v.optional(v.boolean()),
+    message: v.string(),
+    type: v.union(
+      v.literal("warning"),
+      v.literal("info"),
+      v.literal("success"),
+      v.literal("recommendation")
+    ),
+  })
+    .index("by_actionable", ["actionable"])
+    .index("by_read", ["isRead"])
+    .index("by_type", ["type"]),
+  spamRules: defineTable({
+    confidence: v.float64(),
+    description: v.string(),
+    isActive: v.boolean(),
+    name: v.string(),
+    pattern: v.string(),
+  })
+    .index("by_active", ["isActive"])
+    .index("by_confidence", ["confidence"]),
   tasks: defineTable({
-    text: v.string(),
     isCompleted: v.boolean(),
+    text: v.string(),
   }),
+  transcripts: defineTable({
+    callId: v.id("calls"),
+    createdAt: v.string(),
+    duration: v.optional(v.float64()),
+    fullTranscript: v.optional(v.string()),
+    language: v.optional(v.string()),
+    transcript: v.array(
+      v.object({
+        confidence: v.optional(v.float64()),
+        response: v.string(),
+        role: v.union(
+          v.literal("agent"),
+          v.literal("user")
+        ),
+        timestamp: v.optional(v.string()),
+      })
+    ),
+  }).index("by_call", ["callId"]),
 });

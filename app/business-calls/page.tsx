@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, Phone, Clock, TrendingUp, Filter, Search, MoreVertical, PhoneCall, Users, AlertCircle } from "lucide-react";
+import Link from "next/link";
+import { Building2, Phone, Clock, TrendingUp, Filter, Search, MoreVertical, PhoneCall, Users, AlertCircle, MessageSquare, FileText, ChevronRight } from "lucide-react";
 import { 
   GlassCard, 
   GlassCardContent, 
@@ -233,62 +234,68 @@ export default function BusinessCallsPage() {
               <GlassCardContent>
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {filteredCalls.map((call) => (
-                    <div key={call.id} className="flex items-center justify-between p-4 glass-secondary rounded-lg hover:glass-primary transition-all">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-3 h-3 rounded-full ${
-                          call.status === "allowed" ? "bg-green-500" :
-                          call.status === "blocked" ? "bg-red-500" :
-                          "bg-gray-500"
-                        }`} />
-                        <div>
-                          <div className="font-medium">
-                            {call.contact?.name || call.phoneNumber}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {call.phoneNumber} • {call.location || "Unknown"}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-6">
-                        <div className="text-right">
-                          <div className="text-sm font-medium">
-                            {call.timestamp.toLocaleDateString()}
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            {call.timestamp.toLocaleTimeString()}
+                    <Link key={call.id} href={`/business-calls/${call.id}`} className="block">
+                      <div className="flex items-center justify-between p-4 glass-secondary rounded-lg hover:glass-primary transition-all cursor-pointer group">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-3 h-3 rounded-full ${
+                            call.status === "allowed" ? "bg-green-500" :
+                            call.status === "blocked" ? "bg-red-500" :
+                            "bg-gray-500"
+                          }`} />
+                          <div>
+                            <div className="font-medium flex items-center gap-2">
+                              {call.contact?.name || call.phoneNumber}
+                              {call.hasTranscript && (
+                                <MessageSquare className="w-3 h-3 text-trust-blue" />
+                              )}
+                              {call.hasSummary && (
+                                <FileText className="w-3 h-3 text-energy-orange" />
+                              )}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              {call.phoneNumber} • {call.location || "Unknown"}
+                            </div>
                           </div>
                         </div>
                         
-                        <div className="text-right">
-                          <div className="text-sm font-medium">
-                            {formatDuration(call.duration)}
+                        <div className="flex items-center gap-6">
+                          <div className="text-right">
+                            <div className="text-sm font-medium">
+                              {call.timestamp.toLocaleDateString()}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {call.timestamp.toLocaleTimeString()}
+                            </div>
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            {call.carrierInfo || "Unknown"}
+                          
+                          <div className="text-right">
+                            <div className="text-sm font-medium">
+                              {formatDuration(call.duration)}
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              {call.carrierInfo || "Unknown"}
+                            </div>
                           </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <span className={`text-xs px-2 py-1 rounded font-medium ${
-                            call.status === "allowed" ? "bg-green-500/20 text-green-600" :
-                            call.status === "blocked" ? "bg-red-500/20 text-red-600" :
-                            "bg-gray-500/20 text-gray-600"
-                          }`}>
-                            {call.status}
-                          </span>
-                          {call.notes && (
-                            <span className="text-xs bg-blue-500/20 text-blue-600 px-2 py-1 rounded">
-                              Note
+                          
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs px-2 py-1 rounded font-medium ${
+                              call.status === "allowed" ? "bg-green-500/20 text-green-600" :
+                              call.status === "blocked" ? "bg-red-500/20 text-red-600" :
+                              "bg-gray-500/20 text-gray-600"
+                            }`}>
+                              {call.status}
                             </span>
-                          )}
+                            {call.notes && (
+                              <span className="text-xs bg-blue-500/20 text-blue-600 px-2 py-1 rounded">
+                                Note
+                              </span>
+                            )}
+                          </div>
+                          
+                          <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                         </div>
-                        
-                        <GlassButton variant="ghost" size="sm">
-                          <MoreVertical className="w-4 h-4" />
-                        </GlassButton>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                   
                   {filteredCalls.length === 0 && (

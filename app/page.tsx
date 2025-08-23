@@ -184,11 +184,14 @@ export default function StatsPage() {
                 <div className="flex items-center justify-between">
                   <GlassCardTitle>Recent Call Activity</GlassCardTitle>
                   <div className="flex gap-2">
+                    <Link href="/recent-activity">
+                      <GlassButton variant="trust" size="sm">View All Activity</GlassButton>
+                    </Link>
                     <Link href="/personal-calls">
-                      <GlassButton variant="glass" size="sm">View Personal</GlassButton>
+                      <GlassButton variant="glass" size="sm">Personal</GlassButton>
                     </Link>
                     <Link href="/business-calls">
-                      <GlassButton variant="glass" size="sm">View Business</GlassButton>
+                      <GlassButton variant="glass" size="sm">Business</GlassButton>
                     </Link>
                   </div>
                 </div>

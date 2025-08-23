@@ -560,6 +560,41 @@ export const getCallsWithTranscripts = query({
   },
 });
 
+// Utility to sync call flags with transcript/summary existence
+export const syncCallFlags = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const calls = await ctx.db.query("calls").collect();
+    let updated = 0;
+
+    for (const call of calls) {
+      const transcript = await ctx.db
+        .query("transcripts")
+        .withIndex("by_call", (q) => q.eq("callId", call._id))
+        .first();
+      
+      const summary = await ctx.db
+        .query("callSummaries")
+        .withIndex("by_call", (q) => q.eq("callId", call._id))
+        .first();
+
+      const hasTranscript = !!transcript;
+      const hasSummary = !!summary;
+
+      if (call.hasTranscript !== hasTranscript || call.hasSummary !== hasSummary) {
+        await ctx.db.patch(call._id, {
+          hasTranscript,
+          hasSummary,
+          transcriptStatus: hasTranscript ? "completed" : undefined,
+        });
+        updated++;
+      }
+    }
+
+    return { updated, total: calls.length };
+  },
+});
+
 export const getDashboardData = query({
   args: {},
   handler: async (ctx) => {
