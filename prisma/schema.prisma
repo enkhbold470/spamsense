@@ -1,0 +1,275 @@
+// Prisma Schema for Spamsense Call Management System
+// This file defines the database schema for managing contacts, calls, and spam detection
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum CallType {
+  personal
+  business
+}
+
+enum CallStatus {
+  allowed
+  blocked
+  spam
+  unknown
+}
+
+enum CallAction {
+  allow
+  block
+  mark_spam
+  whitelist
+}
+
+enum BookingStatus {
+  confirmed
+  pending
+  completed
+  cancelled
+}
+
+enum InsightType {
+  warning
+  info
+  success
+  recommendation
+}
+
+// Core Models
+model Contact {
+  id            String    @id @default(cuid())
+  name          String?
+  phoneNumber   String    @unique
+  isWhitelisted Boolean   @default(false)
+  isBlocked     Boolean   @default(false)
+  lastCallDate  DateTime?
+  callCount     Int       @default(0)
+  type          CallType  @default(personal)
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  calls Call[]
+
+  @@index([phoneNumber])
+  @@index([isWhitelisted])
+  @@index([isBlocked])
+  @@index([type])
+  @@map("contacts")
+}
+
+model Call {
+  id           String     @id @default(cuid())
+  phoneNumber  String
+  contactId    String?
+  type         CallType   @default(personal)
+  status       CallStatus @default(unknown)
+  duration     Int        @default(0) // in seconds
+  timestamp    DateTime   @default(now())
+  isSpam       Boolean    @default(false)
+  confidence   Int        @default(0) // 0-100 spam confidence
+  location     String?
+  carrierInfo  String?
+  action       CallAction?
+  notes        String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Relations
+  contact Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@index([phoneNumber])
+  @@index([timestamp])
+  @@index([isSpam])
+  @@index([status])
+  @@index([type])
+  @@index([contactId])
+  @@map("calls")
+}
+
+model SpamRule {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  pattern     String  // regex pattern
+  isActive    Boolean @default(true)
+  confidence  Int     @default(50) // 0-100
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("spam_rules")
+}
+
+model AIInsight {
+  id         String      @id @default(cuid())
+  type       InsightType
+  message    String
+  confidence Int         @default(0) // 0-100
+  actionable Boolean     @default(false)
+  isRead     Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([type])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("ai_insights")
+}
+
+// Legacy Booking System Models (for backward compatibility)
+model Client {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  avatar    String?
+  initials  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookings Booking[]
+
+  @@index([email])
+  @@map("clients")
+}
+
+model Service {
+  id       String @id @default(cuid())
+  name     String @unique
+  duration Int    // in minutes
+  price    Float
+  category String
+  color    String?
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookings Booking[]
+  staffServices StaffService[]
+
+  @@index([category])
+  @@index([isActive])
+  @@map("services")
+}
+
+model Staff {
+  id       String  @id @default(cuid())
+  name     String
+  email    String  @unique
+  avatar   String?
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  bookings Booking[]
+  staffServices StaffService[]
+
+  @@index([email])
+  @@index([isActive])
+  @@map("staff")
+}
+
+// Junction table for Staff and Services many-to-many relationship
+model StaffService {
+  id        String @id @default(cuid())
+  staffId   String
+  serviceId String
+  createdAt DateTime @default(now())
+
+  // Relations
+  staff   Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([staffId, serviceId])
+  @@index([staffId])
+  @@index([serviceId])
+  @@map("staff_services")
+}
+
+model Booking {
+  id        String        @id @default(cuid())
+  clientId  String
+  serviceId String
+  staffId   String
+  startTime DateTime
+  endTime   DateTime
+  status    BookingStatus @default(pending)
+  notes     String?
+  price     Float
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relations
+  client  Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  staff   Staff   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@index([serviceId])
+  @@index([staffId])
+  @@index([startTime])
+  @@index([status])
+  @@map("bookings")
+}
+
+// System Configuration
+model SystemConfig {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  type  String @default("string") // string, number, boolean, json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+  @@map("system_config")
+}
+
+// Analytics and Reporting
+model CallAnalytics {
+  id               String   @id @default(cuid())
+  date             DateTime @unique @db.Date
+  totalCalls       Int      @default(0)
+  personalCalls    Int      @default(0)
+  businessCalls    Int      @default(0)
+  spamBlocked      Int      @default(0)
+  allowedCalls     Int      @default(0)
+  blockedCalls     Int      @default(0)
+  avgCallDuration  Float    @default(0)
+  spamPercentage   Float    @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([date])
+  @@map("call_analytics")
+}
+
+// User Management (if multi-user system)
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  role      String   @default("user") // user, admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
