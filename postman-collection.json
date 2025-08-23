@@ -1,0 +1,408 @@
+{
+  "info": {
+    "name": "SpamSense API",
+    "description": "API endpoints for publishing calls, transcripts, and summaries to Convex",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "callId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "transcriptId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Calls",
+      "item": [
+        {
+          "name": "Create Call",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('callId', response.callId);",
+                  "    console.log('Call ID saved:', response.callId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"+1-555-TEST-001\",\n  \"type\": \"business\",\n  \"status\": \"allowed\",\n  \"duration\": 420,\n  \"timestamp\": \"{{$isoTimestamp}}\",\n  \"isSpam\": false,\n  \"confidence\": 5,\n  \"location\": \"Test Location\",\n  \"carrierInfo\": \"Test Carrier\",\n  \"action\": \"allow\",\n  \"notes\": \"Test call from Postman\",\n  \"hasTranscript\": false,\n  \"hasSummary\": false,\n  \"transcriptStatus\": \"pending\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
+            }
+          }
+        },
+        {
+          "name": "Get Call by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/calls?callId={{callId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"],
+              "query": [
+                {
+                  "key": "callId",
+                  "value": "{{callId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Calls",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/calls?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Business Calls",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/calls?type=business&limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "business"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transcripts",
+      "item": [
+        {
+          "name": "Publish Transcript",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('transcriptId', response.transcriptId);",
+                  "    console.log('Transcript ID saved:', response.transcriptId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"transcript\": [\n    {\n      \"role\": \"user\",\n      \"response\": \"Hello, I'm calling about my account\",\n      \"timestamp\": \"{{$isoTimestamp}}\",\n      \"confidence\": 0.98\n    },\n    {\n      \"role\": \"agent\",\n      \"response\": \"Hi! I'd be happy to help you with your account. Can you please provide your account number?\",\n      \"timestamp\": \"{{$isoTimestamp}}\",\n      \"confidence\": 0.95\n    },\n    {\n      \"role\": \"user\",\n      \"response\": \"Sure, it's 12345678\",\n      \"timestamp\": \"{{$isoTimestamp}}\",\n      \"confidence\": 0.99\n    },\n    {\n      \"role\": \"agent\",\n      \"response\": \"Thank you. I can see your account here. What can I help you with today?\",\n      \"timestamp\": \"{{$isoTimestamp}}\",\n      \"confidence\": 0.97\n    }\n  ],\n  \"fullTranscript\": \"user: Hello, I'm calling about my account\\nagent: Hi! I'd be happy to help you with your account. Can you please provide your account number?\\nuser: Sure, it's 12345678\\nagent: Thank you. I can see your account here. What can I help you with today?\",\n  \"language\": \"en\",\n  \"duration\": 420,\n  \"createdAt\": \"{{$isoTimestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transcripts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transcripts"]
+            }
+          }
+        },
+        {
+          "name": "Get Transcript",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/transcripts?callId={{callId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transcripts"],
+              "query": [
+                {
+                  "key": "callId",
+                  "value": "{{callId}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Summaries",
+      "item": [
+        {
+          "name": "Publish Summary",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"transcriptId\": \"{{transcriptId}}\",\n  \"summary\": \"Customer called to inquire about their account status. Provided account number for verification. Friendly interaction with professional service.\",\n  \"intent\": {\n    \"primary\": \"account_inquiry\",\n    \"confidence\": 95,\n    \"keywords\": [\"account\", \"inquiry\", \"verification\", \"help\"],\n    \"sentiment\": \"positive\",\n    \"urgency\": \"low\"\n  },\n  \"keyPoints\": [\n    \"Customer provided account number\",\n    \"Polite and cooperative interaction\",\n    \"Account verification successful\",\n    \"Ready to proceed with assistance\"\n  ],\n  \"actionItems\": [\n    \"Continue with customer's specific request\",\n    \"Ensure all questions are answered\"\n  ],\n  \"followUpRequired\": false,\n  \"satisfactionScore\": 9,\n  \"createdAt\": \"{{$isoTimestamp}}\",\n  \"aiModel\": \"claude-4-sonnet\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/summaries",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "summaries"]
+            }
+          }
+        },
+        {
+          "name": "Get Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/summaries?callId={{callId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "summaries"],
+              "query": [
+                {
+                  "key": "callId",
+                  "value": "{{callId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Summary",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"summary\": \"Updated summary: Customer called to inquire about their account status. Issue was fully resolved during the call.\",\n  \"satisfactionScore\": 10,\n  \"followUpRequired\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/summaries",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "summaries"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Cases",
+      "item": [
+        {
+          "name": "Invalid Call - Missing phoneNumber",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"business\",\n  \"status\": \"allowed\",\n  \"duration\": 420,\n  \"timestamp\": \"{{$isoTimestamp}}\",\n  \"isSpam\": false,\n  \"confidence\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
+            }
+          }
+        },
+        {
+          "name": "Invalid Transcript - Missing callId",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transcript\": [\n    {\n      \"role\": \"user\",\n      \"response\": \"Hello\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transcripts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transcripts"]
+            }
+          }
+        },
+        {
+          "name": "Duplicate Transcript",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"transcript\": [\n    {\n      \"role\": \"user\",\n      \"response\": \"This should fail as duplicate\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transcripts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transcripts"]
+            }
+          }
+        },
+        {
+          "name": "Get Non-existent Call",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/calls?callId=invalid-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"],
+              "query": [
+                {
+                  "key": "callId",
+                  "value": "invalid-id"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complete Workflow",
+      "item": [
+        {
+          "name": "1. Create Personal Call",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('callId', response.callId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"+1-555-FAMILY-01\",\n  \"type\": \"personal\",\n  \"status\": \"allowed\",\n  \"duration\": 600,\n  \"timestamp\": \"{{$isoTimestamp}}\",\n  \"isSpam\": false,\n  \"confidence\": 2,\n  \"location\": \"Los Angeles, CA\",\n  \"carrierInfo\": \"Verizon\",\n  \"action\": \"allow\",\n  \"notes\": \"Family catch-up call\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
+            }
+          }
+        },
+        {
+          "name": "2. Add Family Transcript",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"transcript\": [\n    {\n      \"role\": \"user\",\n      \"response\": \"¡Hola mamá! ¿Cómo estás?\",\n      \"confidence\": 0.98\n    },\n    {\n      \"role\": \"agent\",\n      \"response\": \"¡Hola mija! Muy bien, gracias. I was just thinking about you.\",\n      \"confidence\": 0.96\n    },\n    {\n      \"role\": \"user\",\n      \"response\": \"That's so sweet! How was your week?\",\n      \"confidence\": 0.97\n    },\n    {\n      \"role\": \"agent\",\n      \"response\": \"Very good! Your father and I went to the market. Don't forget dinner on Sunday!\",\n      \"confidence\": 0.94\n    }\n  ],\n  \"language\": \"en\",\n  \"duration\": 600\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transcripts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transcripts"]
+            }
+          }
+        },
+        {
+          "name": "3. Add Family Summary",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"summary\": \"Heartwarming family call between mother and daughter. Bilingual conversation showing close family bonds. Reminder about Sunday family dinner.\",\n  \"intent\": {\n    \"primary\": \"personal\",\n    \"confidence\": 99,\n    \"keywords\": [\"family\", \"mother\", \"dinner\", \"Sunday\", \"love\"],\n    \"sentiment\": \"positive\",\n    \"urgency\": \"low\"\n  },\n  \"keyPoints\": [\n    \"Mother-daughter check-in call\",\n    \"Bilingual conversation (Spanish/English)\",\n    \"Parents went to market this week\",\n    \"Sunday family dinner reminder\"\n  ],\n  \"actionItems\": [\n    \"Attend Sunday family dinner\"\n  ],\n  \"followUpRequired\": false,\n  \"satisfactionScore\": 10,\n  \"aiModel\": \"claude-4-sonnet\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/summaries",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "summaries"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

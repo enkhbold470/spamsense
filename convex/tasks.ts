@@ -182,11 +182,22 @@ export const addCall = mutation({
       )
     ),
     notes: v.optional(v.string()),
+    timestamp: v.optional(v.string()),
+    hasTranscript: v.optional(v.boolean()),
+    hasSummary: v.optional(v.boolean()),
+    transcriptStatus: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("processing"),
+        v.literal("completed"),
+        v.literal("failed")
+      )
+    ),
   },
   handler: async (ctx, args) => {
     const callId = await ctx.db.insert("calls", {
       ...args,
-      timestamp: new Date().toISOString(),
+      timestamp: args.timestamp || new Date().toISOString(),
     });
 
     // Update contact call count if contact exists
