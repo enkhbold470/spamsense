@@ -1,0 +1,10 @@
+{"name": "Sequential Number Pattern", "pattern": "^\\+1[0-9]{3}(012|123|234|345|456|567|678|789)[0-9]{4}$", "confidence": 92, "isActive": true, "description": "Detects phone numbers with sequential digits commonly used in spoofing"}
+{"name": "Robocall Prefixes", "pattern": "^\\+1(800|888|877|866|855|844|833|822)ROBO", "confidence": 99, "isActive": true, "description": "Known robocall service prefixes that use obvious spam indicators"}
+{"name": "Toll-Free Telemarketing", "pattern": "^\\+1(800|888|877|866|855|844|833|822)[0-9]{7}$", "confidence": 65, "isActive": true, "description": "Toll-free numbers frequently used by telemarketers and robocallers"}
+{"name": "Repeated Digit Patterns", "pattern": "^\\+1[0-9]{3}([0-9])\\1{3,}[0-9]*$", "confidence": 78, "isActive": true, "description": "Numbers with 4+ consecutive identical digits, often machine-generated"}
+{"name": "Government Impersonation", "pattern": "^\\+1(202|212|213|310|415|617|703|212)555[0-9]{4}$", "confidence": 95, "isActive": true, "description": "Fake government numbers using obvious test patterns"}
+{"name": "International Scam Prefixes", "pattern": "^\\+1(900|976|212555|202555)[0-9]{4,7}$", "confidence": 97, "isActive": true, "description": "Premium rate and fake government numbers used in scams"}
+{"name": "Car Warranty Spam", "pattern": "^\\+1[0-9]{3}(CAR|WRNT|AUTO)[0-9A-Z]{4}$", "confidence": 96, "isActive": true, "description": "Extended car warranty spam calls using obvious keywords"}
+{"name": "Credit Card Offers", "pattern": "^\\+1[0-9]{3}(CARD|DEBT|LOAN)[0-9A-Z]{4}$", "confidence": 85, "isActive": true, "description": "Unsolicited credit and loan offers from suspicious numbers"}
+{"name": "Health Insurance Spam", "pattern": "^\\+1[0-9]{3}(HLTH|INSUR)[0-9A-Z]{5}$", "confidence": 88, "isActive": true, "description": "Health insurance telemarketing using keyword-based numbers"}
+{"name": "Tech Support Scams", "pattern": "^\\+1[0-9]{3}(TECH|SUPP|COMP)[0-9A-Z]{4}$", "confidence": 93, "isActive": true, "description": "Fake tech support scams using technology-related keywords"}

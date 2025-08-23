@@ -17,16 +17,19 @@ import {
 // import mockData from "@/lib/mockData";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import type { User } from "@/components/ui/top-bar";
-import type { CallStatus, CallType } from "@/lib/types";
+import type { 
+  User, 
+  Call, 
+  CallStatus, 
+  CallType, 
+  TimeRange 
+} from "@/lib/convex-types";
 
 const sampleUser: User = {
   name: "Mariana Ramirez",
   email: "mariana@spamsense.com",
   initials: "MR"
 };
-
-type TimeRange = "today" | "week" | "month" | "all";
 
 export default function RecentActivityPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -116,12 +119,12 @@ export default function RecentActivityPage() {
     return `${days}d ago`;
   };
 
-  const getCallDetailUrl = (call: any) => {
-    return call.type === "personal" ? `/personal-calls/${call._id}` : `/business-calls/${call._id}`;
+  const getCallDetailUrl = (call: Call) => {
+    return `/calls/${call._id}`;
   };
 
   // Loading state
-  if (!regularCalls) {
+  if (!calls) {
     return (
       <div className="flex min-h-screen">
         <NavSidebar />

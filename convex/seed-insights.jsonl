@@ -1,0 +1,8 @@
+{"type": "warning", "message": "Spam call volume increased 23% this week. Consider reviewing your spam filters.", "confidence": 88, "actionable": true, "isRead": false, "createdAt": "2024-01-20T08:00:00.000Z"}
+{"type": "info", "message": "Your most active contact this week: Sofia Martinez (156 total calls).", "confidence": 100, "actionable": false, "isRead": false, "createdAt": "2024-01-20T07:30:00.000Z"}
+{"type": "recommendation", "message": "Consider whitelisting +1-555-1004 (Global Enterprises). They've called 15 times with no spam indicators.", "confidence": 85, "actionable": true, "isRead": false, "createdAt": "2024-01-19T16:00:00.000Z"}
+{"type": "warning", "message": "Blocked 3 IRS impersonation scam attempts from +1-202-555-0199 this week.", "confidence": 97, "actionable": true, "isRead": false, "createdAt": "2024-01-19T14:30:00.000Z"}
+{"type": "info", "message": "Your spam blocking saved an estimated 45 minutes this week by preventing unwanted calls.", "confidence": 92, "actionable": false, "isRead": true, "createdAt": "2024-01-18T12:00:00.000Z"}
+{"type": "recommendation", "message": "New pattern detected: Car warranty calls are targeting your area code. Updated filters accordingly.", "confidence": 94, "actionable": false, "isRead": false, "createdAt": "2024-01-18T10:15:00.000Z"}
+{"type": "warning", "message": "Multiple robocalls detected from VoIP carriers. Enhanced screening is now active.", "confidence": 91, "actionable": true, "isRead": false, "createdAt": "2024-01-17T15:45:00.000Z"}
+{"type": "info", "message": "TechCorp Solutions has been your most frequent business caller this month (34 calls).", "confidence": 100, "actionable": false, "isRead": true, "createdAt": "2024-01-16T09:20:00.000Z"}

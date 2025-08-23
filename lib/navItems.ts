@@ -1,4 +1,4 @@
-import { NavItem } from "@/components/ui/nav-sidebar";
+import { NavItem } from "@/lib/convex-types";
 import { AlertTriangle, Bot, Building2, Home, User, Users, BarChart3, Clock } from "lucide-react";
 
 export const defaultNavItems: NavItem[] = [

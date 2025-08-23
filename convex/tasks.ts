@@ -516,8 +516,15 @@ export const getCallWithDetails = query({
         .first(),
     ]);
 
+    // Get contact if contactId exists
+    let contact = null;
+    if (call?.contactId) {
+      contact = await ctx.db.get(call.contactId);
+    }
+
     return {
       call,
+      contact,
       transcript,
       summary,
     };
@@ -557,6 +564,25 @@ export const getCallsWithTranscripts = query({
     );
 
     return callsWithDetails;
+  },
+});
+
+// Utility to clear all data from all tables
+export const clearAllData = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const tables = ["contacts", "calls", "spamRules", "insights", "callStats", "transcripts", "callSummaries", "tasks"];
+    let totalDeleted = 0;
+
+    for (const tableName of tables) {
+      const records = await ctx.db.query(tableName as any).collect();
+      for (const record of records) {
+        await ctx.db.delete(record._id);
+        totalDeleted++;
+      }
+    }
+
+    return { deleted: totalDeleted, tables: tables.length };
   },
 });
 
