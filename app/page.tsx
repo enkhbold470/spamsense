@@ -232,13 +232,13 @@ export default function StatsPage() {
             </GlassCard>
 
             {/* Test Route Access */}
-            <div className="fixed bottom-4 right-4 z-50">
+            {/* <div className="fixed bottom-4 right-4 z-50">
               <Link href="/test">
                 <GlassButton variant="energy" className="shadow-lg">
                   🧪 Test Components
                 </GlassButton>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
