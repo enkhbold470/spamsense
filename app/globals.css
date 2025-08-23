@@ -41,82 +41,247 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Liquid Glass Design System Colors */
+  --color-trust-blue: oklch(0.605 0.176 234.05);
+  --color-energy-orange: oklch(0.719 0.157 62.09);
+  --color-growth-green: oklch(0.724 0.166 142.42);
+  --color-alert-red: oklch(0.638 0.234 30.23);
+  
+  /* Glass Effect Variables */
+  --glass-bg: oklch(0 0 0 / 0.05);
+  --glass-bg-light: oklch(1 0 0 / 0.08);
+  --glass-border: oklch(1 0 0 / 0.12);
+  --glass-hover: oklch(1 0 0 / 0.15);
+  --glass-active: oklch(1 0 0 / 0.2);
+  
+  /* Shadows and Glows */
+  --shadow-glass: 0 8px 32px oklch(0 0 0 / 0.15);
+  --shadow-elevated: 0 20px 60px oklch(0 0 0 / 0.25);
+  --glow-blue: 0 0 20px oklch(0.605 0.176 234.05 / 0.3);
+  --glow-orange: 0 0 20px oklch(0.719 0.157 62.09 / 0.3);
 }
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
+  
+  /* Light theme with liquid glass background */
+  --background: linear-gradient(135deg, 
+    oklch(0.95 0.02 250) 0%, 
+    oklch(0.97 0.01 200) 25%,
+    oklch(0.95 0.01 180) 50%,
+    oklch(0.96 0.02 220) 100%);
+  --foreground: oklch(0.15 0 0);
+  
+  --card: var(--glass-bg-light);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: var(--glass-bg-light);
+  --popover-foreground: oklch(0.15 0 0);
+  
+  /* Primary colors using trust blue */
+  --primary: var(--color-trust-blue);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  
+  --secondary: var(--glass-bg-light);
+  --secondary-foreground: oklch(0.25 0 0);
+  --muted: var(--glass-bg);
+  --muted-foreground: oklch(0.5 0 0);
+  
+  --accent: var(--color-energy-orange);
+  --accent-foreground: oklch(0.985 0 0);
+  
+  --destructive: var(--color-alert-red);
+  --border: var(--glass-border);
+  --input: var(--glass-bg-light);
+  --ring: var(--color-trust-blue);
+  
+  /* Chart colors with liquid glass theme */
+  --chart-1: var(--color-trust-blue);
+  --chart-2: var(--color-energy-orange);
+  --chart-3: var(--color-growth-green);
+  --chart-4: oklch(0.7 0.15 300);
+  --chart-5: oklch(0.65 0.18 60);
+  
+  /* Sidebar with glass effect */
+  --sidebar: var(--glass-bg-light);
+  --sidebar-foreground: oklch(0.15 0 0);
+  --sidebar-primary: var(--color-trust-blue);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: var(--glass-hover);
+  --sidebar-accent-foreground: oklch(0.15 0 0);
+  --sidebar-border: var(--glass-border);
+  --sidebar-ring: var(--color-trust-blue);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* Dark theme with glass effects */
+  --background: linear-gradient(135deg, 
+    oklch(0.08 0.01 250) 0%, 
+    oklch(0.12 0.01 220) 25%,
+    oklch(0.10 0.01 280) 50%,
+    oklch(0.14 0.02 240) 100%);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  
+  --glass-bg: oklch(1 0 0 / 0.08);
+  --glass-bg-light: oklch(1 0 0 / 0.12);
+  --glass-border: oklch(1 0 0 / 0.15);
+  --glass-hover: oklch(1 0 0 / 0.18);
+  --glass-active: oklch(1 0 0 / 0.25);
+  
+  --card: var(--glass-bg);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --popover: var(--glass-bg);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
+  
+  --primary: var(--color-trust-blue);
+  --primary-foreground: oklch(0.985 0 0);
+  
+  --secondary: var(--glass-bg);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --muted: oklch(0.15 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  
+  --accent: var(--color-energy-orange);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
+  
+  --destructive: var(--color-alert-red);
+  --border: var(--glass-border);
+  --input: var(--glass-bg-light);
+  --ring: var(--color-trust-blue);
+  
+  --chart-1: var(--color-trust-blue);
+  --chart-2: var(--color-energy-orange);
+  --chart-3: var(--color-growth-green);
+  --chart-4: oklch(0.7 0.15 300);
+  --chart-5: oklch(0.65 0.18 60);
+  
+  --sidebar: var(--glass-bg);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary: var(--color-trust-blue);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent: var(--glass-hover);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-border: var(--glass-border);
+  --sidebar-ring: var(--color-trust-blue);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground min-h-screen;
+    background: var(--background);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Dynamic background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, var(--color-trust-blue) 0%, transparent 40%),
+      radial-gradient(circle at 80% 60%, var(--color-energy-orange) 0%, transparent 40%),
+      radial-gradient(circle at 40% 80%, var(--color-growth-green) 0%, transparent 40%);
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: -1;
+    animation: backgroundShift 20s ease-in-out infinite;
+  }
+  
+  @keyframes backgroundShift {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.05) rotate(1deg); }
+  }
+}
+
+@layer utilities {
+  /* Liquid Glass Effects */
+  .glass-primary {
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(40px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+  }
+  
+  .glass-secondary {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+  }
+  
+  .glass-hover {
+    background: var(--glass-hover);
+    backdrop-filter: blur(30px);
+    border-color: var(--glass-border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-elevated);
+  }
+  
+  .glass-active {
+    background: var(--glass-active);
+    backdrop-filter: blur(50px);
+  }
+  
+  /* Glow Effects */
+  .glow-blue {
+    box-shadow: var(--glow-blue);
+  }
+  
+  .glow-orange {
+    box-shadow: var(--glow-orange);
+  }
+  
+  /* Animation Utilities */
+  .animate-fade-in {
+    animation: fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

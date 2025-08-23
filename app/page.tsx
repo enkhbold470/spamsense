@@ -1,103 +1,144 @@
 import Image from "next/image";
+import Link from "next/link";
+import { GlassCard, GlassCardContent, GlassCardHeader, GlassCardTitle, GlassButton } from "@/components/ui";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen p-8">
+      {/* Test Route Link */}
+      <div className="fixed top-4 right-4 z-50">
+        <Link href="/test">
+          <GlassButton variant="energy" className="shadow-lg">
+            🧪 View Components
+          </GlassButton>
+        </Link>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <div className="max-w-4xl mx-auto space-y-8 pt-20">
+        {/* Hero Section */}
+        <GlassCard className="text-center" size="lg">
+          <GlassCardHeader>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-trust-blue to-energy-orange rounded-xl flex items-center justify-center text-white font-bold text-xl">
+                S
+              </div>
+              <GlassCardTitle className="text-4xl">Spamsense</GlassCardTitle>
+            </div>
+            <p className="text-xl text-muted-foreground">
+              Beautiful Liquid Glass Dashboard with Next.js & Tailwind CSS
+            </p>
+          </GlassCardHeader>
+          
+          <GlassCardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+              <div className="glass-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">🎨 Liquid Glass UI</h3>
+                <p className="text-sm text-muted-foreground">
+                  Apple-inspired glassmorphism design system
+                </p>
+              </div>
+              <div className="glass-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">⚡ High Performance</h3>
+                <p className="text-sm text-muted-foreground">
+                  CSS-based animations with optimal performance
+                </p>
+              </div>
+              <div className="glass-secondary p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">🔧 Type Safe</h3>
+                <p className="text-sm text-muted-foreground">
+                  Full TypeScript support with shadcn/ui
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 items-center justify-center flex-wrap">
+              <Link href="/test">
+                <GlassButton variant="trust" size="lg">
+                  🧪 View Components
+                </GlassButton>
+              </Link>
+              
+              <Link href="/test/layout">
+                <GlassButton variant="glass" size="lg">
+                  🏗️ Test Layout
+                </GlassButton>
+              </Link>
+              
+              <a 
+                href="https://github.com/your-repo/spamsense" 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <GlassButton variant="outline" size="lg">
+                  📱 GitHub
+                </GlassButton>
+              </a>
+            </div>
+          </GlassCardContent>
+        </GlassCard>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="glass-primary p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold text-trust-blue">26+</div>
+            <div className="text-sm text-muted-foreground">Components</div>
+          </div>
+          <div className="glass-primary p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold text-energy-orange">100%</div>
+            <div className="text-sm text-muted-foreground">TypeScript</div>
+          </div>
+          <div className="glass-primary p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold text-growth-green">0ms</div>
+            <div className="text-sm text-muted-foreground">Bundle Impact</div>
+          </div>
+          <div className="glass-primary p-4 rounded-lg text-center">
+            <div className="text-2xl font-bold text-trust-blue">A11y</div>
+            <div className="text-sm text-muted-foreground">Accessible</div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Footer */}
+        <GlassCard className="text-center">
+          <GlassCardContent>
+            <p className="text-muted-foreground mb-4">
+              Built with Next.js 15, Tailwind CSS 4, and shadcn/ui
+            </p>
+            <div className="flex gap-4 items-center justify-center">
+              <a
+                className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-muted-foreground"
+                href="https://nextjs.org"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  aria-hidden
+                  src="/globe.svg"
+                  alt="Globe icon"
+                  width={16}
+                  height={16}
+                />
+                Next.js
+              </a>
+              <div className="w-px h-4 bg-border" />
+              <a
+                className="flex items-center gap-2 hover:underline hover:underline-offset-4 text-muted-foreground"
+                href="https://tailwindcss.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  aria-hidden
+                  src="/window.svg"
+                  alt="Window icon"
+                  width={16}
+                  height={16}
+                />
+                Tailwind
+              </a>
+            </div>
+          </GlassCardContent>
+        </GlassCard>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,23 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+
+- use pnpm
+- use lucide-react for icons
+- simple tailwindcss, shadcn
+- use app route only
+- OPENAI_API_KEY
+- Language: Typescript
+- Front-end: Nextjs
+<!-- - Back-end: Next.js Server Actions, API route -->
+- CSS UI: Tailwindcss, Shadcn, Aceternity
+
+<!-- - ORM: Prisma -->
+
+<!-- - LLM: gpt-4.1 -->
+- Node: pnpm
+- for installing new packages, always use tool call, for example ```pnpm add openai``` or new UI, ```pnpm dlx shadcn@latest add button```
+- for placeholder images, use https://placekeanu.com/500
