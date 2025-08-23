@@ -28,17 +28,24 @@ interface PublishCallRequest {
 }
 
 export async function POST(request: NextRequest) {
+  console.log("[CALLS API] POST request received");
+  
   try {
+    console.log("[CALLS API] Parsing request body...");
     // Parse the request body
     const body: PublishCallRequest = await request.json();
+    console.log("[CALLS API] Request body parsed successfully:", JSON.stringify(body, null, 2));
 
+    console.log("[CALLS API] Starting validation...");
     // Validate required fields
     if (!body.phoneNumber) {
+      console.log("[CALLS API] Validation failed: Missing phoneNumber");
       return NextResponse.json(
         { error: "Missing required field: phoneNumber" },
         { status: 400 }
       );
     }
+    console.log("[CALLS API] phoneNumber validation passed:", body.phoneNumber);
 
     if (!body.type || !["personal", "business"].includes(body.type)) {
       return NextResponse.json(
@@ -94,16 +101,21 @@ export async function POST(request: NextRequest) {
     // Validate optional contactId if provided
     let contactId: Id<"contacts"> | undefined;
     if (body.contactId) {
+      console.log("[CALLS API] Validating contactId:", body.contactId);
       contactId = body.contactId as Id<"contacts">;
       // Verify contact exists
+      console.log("[CALLS API] Querying contacts from Convex...");
       const contacts = await convex.query(api.tasks.getContacts, {});
+      console.log("[CALLS API] Retrieved", contacts.length, "contacts from Convex");
       const contact = contacts.find(c => c._id === contactId);
       if (!contact) {
+        console.log("[CALLS API] Contact not found for contactId:", contactId);
         return NextResponse.json(
           { error: "Invalid contactId: contact not found" },
           { status: 400 }
         );
       }
+      console.log("[CALLS API] Contact validation passed:", contact._id);
     }
 
     // Validate optional action if provided
@@ -122,6 +134,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log("[CALLS API] All validations passed, preparing call data...");
     // Prepare call data
     const callData = {
       phoneNumber: body.phoneNumber,
@@ -140,9 +153,12 @@ export async function POST(request: NextRequest) {
       hasSummary: body.hasSummary || false,
       transcriptStatus: body.transcriptStatus,
     };
+    console.log("[CALLS API] Call data prepared:", JSON.stringify(callData, null, 2));
 
+    console.log("[CALLS API] Saving call to Convex...");
     // Save call to Convex
     const callId = await convex.mutation(api.tasks.addCall, callData);
+    console.log("[CALLS API] Call saved successfully with ID:", callId);
 
     return NextResponse.json({
       success: true,
@@ -151,17 +167,22 @@ export async function POST(request: NextRequest) {
     }, { status: 201 });
 
   } catch (error) {
-    console.error("Error publishing call:", error);
+    console.error("[CALLS API] Error publishing call:", error);
+    console.error("[CALLS API] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+    console.error("[CALLS API] Error name:", error instanceof Error ? error.name : 'Unknown');
+    console.error("[CALLS API] Error message:", error instanceof Error ? error.message : String(error));
     
     if (error instanceof SyntaxError) {
+      console.log("[CALLS API] Returning 400 - Invalid JSON");
       return NextResponse.json(
         { error: "Invalid JSON in request body" },
         { status: 400 }
       );
     }
 
+    console.log("[CALLS API] Returning 500 - Internal server error");
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
@@ -169,26 +190,36 @@ export async function POST(request: NextRequest) {
 
 // GET method to retrieve calls
 export async function GET(request: NextRequest) {
+  console.log("[CALLS API] GET request received");
+  
   try {
+    console.log("[CALLS API] Parsing URL search parameters...");
     const { searchParams } = new URL(request.url);
+    console.log("[CALLS API] Search parameters:", Object.fromEntries(searchParams.entries()));
     const callId = searchParams.get("callId");
     const phoneNumber = searchParams.get("phoneNumber");
     const type = searchParams.get("type");
     const status = searchParams.get("status");
     const limit = searchParams.get("limit");
+    console.log("[CALLS API] Extracted parameters - callId:", callId, "phoneNumber:", phoneNumber, "type:", type, "status:", status, "limit:", limit);
 
     // If specific call ID is requested
     if (callId) {
+      console.log("[CALLS API] Fetching specific call with ID:", callId);
+      console.log("[CALLS API] Querying all calls from Convex...");
       const calls = await convex.query(api.tasks.getCalls, {});
+      console.log("[CALLS API] Retrieved", calls.length, "calls from Convex");
       const call = calls.find(c => c._id === callId);
       
       if (!call) {
+        console.log("[CALLS API] Call not found for ID:", callId);
         return NextResponse.json(
           { error: "Call not found" },
           { status: 404 }
         );
       }
 
+      console.log("[CALLS API] Call found, returning call data");
       return NextResponse.json({
         success: true,
         call
@@ -196,31 +227,43 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter calls based on query parameters
+    console.log("[CALLS API] Fetching all calls from Convex...");
     let calls = await convex.query(api.tasks.getCalls, {});
+    console.log("[CALLS API] Retrieved", calls.length, "total calls from Convex");
 
     if (phoneNumber) {
+      console.log("[CALLS API] Filtering calls by phoneNumber:", phoneNumber);
       calls = calls.filter(call => call.phoneNumber === phoneNumber);
+      console.log("[CALLS API] After phoneNumber filtering:", calls.length, "calls remain");
     }
 
     if (type && ["personal", "business"].includes(type)) {
+      console.log("[CALLS API] Filtering calls by type:", type);
       calls = calls.filter(call => call.type === type);
+      console.log("[CALLS API] After type filtering:", calls.length, "calls remain");
     }
 
     if (status && ["allowed", "blocked", "spam", "unknown"].includes(status)) {
+      console.log("[CALLS API] Filtering calls by status:", status);
       calls = calls.filter(call => call.status === status);
+      console.log("[CALLS API] After status filtering:", calls.length, "calls remain");
     }
 
     // Apply limit if provided
     if (limit) {
       const limitNum = parseInt(limit, 10);
+      console.log("[CALLS API] Applying limit:", limitNum);
       if (!isNaN(limitNum) && limitNum > 0) {
         calls = calls.slice(0, limitNum);
+        console.log("[CALLS API] After limit applied:", calls.length, "calls remain");
       }
     }
 
     // Sort by timestamp (newest first)
+    console.log("[CALLS API] Sorting calls by timestamp (newest first)");
     calls.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
+    console.log("[CALLS API] Returning", calls.length, "calls");
     return NextResponse.json({
       success: true,
       calls,
@@ -228,9 +271,12 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error("Error retrieving calls:", error);
+    console.error("[CALLS API] Error retrieving calls:", error);
+    console.error("[CALLS API] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+    console.error("[CALLS API] Error name:", error instanceof Error ? error.name : 'Unknown');
+    console.error("[CALLS API] Error message:", error instanceof Error ? error.message : String(error));
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
