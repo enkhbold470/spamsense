@@ -1,3 +1,6 @@
+# Stats Page
+<img width="1915" height="1041" alt="image" src="https://github.com/user-attachments/assets/eeac7cc7-a360-474e-88e8-fb76fa528775" />
+
 # figma designs: 
 
 
