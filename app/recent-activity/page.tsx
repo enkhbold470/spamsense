@@ -22,8 +22,16 @@ import type {
   Call, 
   CallStatus, 
   CallType, 
-  TimeRange 
+  TimeRange,
+  CallTranscript,
+  CallSummary
 } from "@/lib/convex-types";
+
+// Extended call type that includes transcript and summary
+interface CallWithExtras extends Call {
+  transcript?: CallTranscript;
+  summary?: CallSummary;
+}
 
 const sampleUser: User = {
   name: "Mariana Ramirez",
@@ -43,18 +51,18 @@ export default function RecentActivityPage() {
   const callStats = useQuery(api.tasks.getCallStats);
   
   // Combine calls with and without transcripts, prioritizing calls with details
-  const calls = callsWithDetails && regularCalls ? [
+  const calls: CallWithExtras[] = callsWithDetails && regularCalls ? [
     ...callsWithDetails.map(item => ({
       ...item.call,
       hasTranscript: !!item.transcript,
       hasSummary: !!item.summary,
-      transcript: item.transcript,
-      summary: item.summary
-    })),
+      transcript: item.transcript || undefined,
+      summary: item.summary || undefined
+    } as CallWithExtras)),
     ...regularCalls.filter(call => 
       !callsWithDetails.some(item => item.call._id === call._id)
-    )
-  ] : regularCalls || [];
+    ).map(call => call as CallWithExtras)
+  ] : (regularCalls || []).map(call => call as CallWithExtras);
   
   // const allCalls = mockData.calls.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   const allCalls = calls ? calls.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) : [];
@@ -119,7 +127,7 @@ export default function RecentActivityPage() {
     return `${days}d ago`;
   };
 
-  const getCallDetailUrl = (call: Call) => {
+  const getCallDetailUrl = (call: CallWithExtras) => {
     return `/calls/${call._id}`;
   };
 
@@ -266,7 +274,7 @@ export default function RecentActivityPage() {
               
               <GlassCardContent>
                 <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                  {filteredCalls.map((call) => (
+                  {filteredCalls.map((call: CallWithExtras) => (
                     <Link 
                       key={call._id} 
                       href={getCallDetailUrl(call)}
@@ -306,9 +314,9 @@ export default function RecentActivityPage() {
                             <div className="text-sm text-muted-foreground">
                               {call.location || "Unknown location"} • {call.carrierInfo || "Unknown carrier"}
                             </div>
-                            {(call as any).summary?.intent && (
+                            {call.summary?.intent && (
                               <div className="text-xs text-muted-foreground mt-1">
-                                Intent: {(call as any).summary.intent.primary} • Sentiment: {(call as any).summary.intent.sentiment}
+                                Intent: {call.summary.intent.primary} • Sentiment: {call.summary.intent.sentiment}
                               </div>
                             )}
                             {call.notes && (
@@ -316,9 +324,9 @@ export default function RecentActivityPage() {
                                 📝 {call.notes}
                               </div>
                             )}
-                            {(call as any).transcript?.transcript && (call as any).transcript.transcript.length > 0 && (
+                            {call.transcript?.transcript && call.transcript.transcript.length > 0 && (
                               <div className="text-xs text-muted-foreground mt-1 truncate max-w-md">
-                                💬 "{(call as any).transcript.transcript[0].response}"
+                                💬 &quot; {call.transcript.transcript[0].response}&quot;
                               </div>
                             )}
                           </div>

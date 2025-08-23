@@ -11,20 +11,33 @@ import {
   NavSidebar,
   TopBar
 } from "@/components/ui";
-import mockData from "@/lib/mockData";
 import type { User } from "@/components/ui/top-bar";
+import { Call, CallStatus, CallType } from "@/lib/convex-types";
 
 // This page is a Server Component (default in app/ directory).
 // Remove the event handler from the prop passed to TopBar to fix the error.
 
 const sampleUser: User = {
-  name: "Sarah Johnson",
-  email: "sarah@spamsense.com",
-  initials: "SJ"
+  name: "Mariana Ramirez",
+  email: "mariana@spamsense.com",
+  initials: "MR"
 };
 
 export default function StatsPage() {
-  const { stats, recentCalls, insights } = mockData;
+    const { stats, recentCalls, insights } = {
+    stats: {
+      totalCalls: 100,
+      spamBlocked: 10,
+      personalCalls: 50,
+      businessCalls: 30,
+      spamPercentage: 10,
+      allowedCalls: 90,
+      blockedCalls: 10,
+      avgCallDuration: 120
+    },
+    recentCalls: [],
+    insights: []
+  };
   const locationFilter = {
     current: "All Devices",
     options: ["All Devices", "iPhone", "Work Phone", "Home"],
@@ -59,7 +72,7 @@ export default function StatsPage() {
               <StatCard
                 label="Total Calls"
                 value={stats.totalCalls}
-                change={stats.callsChange}
+                change={stats.totalCalls}
                 trend="positive"
                 icon={<Phone className="w-5 h-5" />}
                 delay={0.1}
@@ -67,7 +80,7 @@ export default function StatsPage() {
               <StatCard
                 label="Spam Blocked"
                 value={stats.spamBlocked}
-                change={stats.spamChange}
+                  change={stats.spamBlocked}
                 trend="negative"
                 icon={<Shield className="w-5 h-5" />}
                 delay={0.2}
@@ -89,7 +102,7 @@ export default function StatsPage() {
             {/* Call Distribution */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <GlassCard>
-                <GlassCardHeader>
+                <GlassCardHeader className="py-4">
                   <GlassCardTitle>Call Distribution</GlassCardTitle>
                 </GlassCardHeader>
                 <GlassCardContent>
@@ -178,62 +191,7 @@ export default function StatsPage() {
               </GlassCard>
             </div>
 
-            {/* Recent Activity */}
-            <GlassCard>
-              <GlassCardHeader>
-                <div className="flex items-center justify-between">
-                  <GlassCardTitle>Recent Call Activity</GlassCardTitle>
-                  <div className="flex gap-2">
-                    <Link href="/recent-activity">
-                      <GlassButton variant="trust" size="sm">View All Activity</GlassButton>
-                    </Link>
-                    <Link href="/personal-calls">
-                      <GlassButton variant="glass" size="sm">Personal</GlassButton>
-                    </Link>
-                    <Link href="/business-calls">
-                      <GlassButton variant="glass" size="sm">Business</GlassButton>
-                    </Link>
-                  </div>
-                </div>
-              </GlassCardHeader>
-              <GlassCardContent>
-                <div className="space-y-3">
-                  {recentCalls.slice(0, 6).map((call) => (
-                    <div key={call.id} className="flex items-center justify-between p-3 glass-secondary rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-3 h-3 rounded-full ${
-                          call.type === "personal" ? "bg-trust-blue" :
-                          call.type === "business" ? "bg-energy-orange" : "bg-alert-red"
-                        }`} />
-                        <div>
-                          <div className="font-medium">
-                            {call.contact?.name || call.phoneNumber}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {call.timestamp.toLocaleTimeString()} • {call.duration > 0 ? `${Math.floor(call.duration / 60)}:${(call.duration % 60).toString().padStart(2, '0')}` : 'Blocked'}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs px-2 py-1 rounded font-medium ${
-                          call.status === "allowed" ? "bg-green-500/20 text-green-600" :
-                          call.status === "blocked" ? "bg-red-500/20 text-red-600" :
-                          "bg-gray-500/20 text-gray-600"
-                        }`}>
-                          {call.status}
-                        </span>
-                        {call.isSpam && (
-                          <span className="text-xs bg-red-500/20 text-red-600 px-2 py-1 rounded">
-                            {call.confidence}% spam
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </GlassCardContent>
-            </GlassCard>
-
+   
             {/* Test Route Access */}
             {/* <div className="fixed bottom-4 right-4 z-50">
               <Link href="/test">

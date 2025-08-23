@@ -13,9 +13,10 @@ import {
   TopBar,
   GlassInput
 } from "@/components/ui";
-import mockData from "@/lib/mockData";
 import type { User } from "@/components/ui/top-bar";
-import type { CallStatus } from "@/lib/types";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import type { CallStatus } from "@/lib/convex-types";
 
 const sampleUser: User = {
   name: "Sarah Johnson",
@@ -29,31 +30,31 @@ export default function SpamManagementPage() {
   const [showAddRule, setShowAddRule] = useState(false);
   const [newRule, setNewRule] = useState({ name: "", pattern: "", description: "" });
   
-  const spamCalls = mockData.getSpamCalls();
-  const spamRules = mockData.spamRules;
+  const spamCalls = useQuery(api.tasks.getSpamCalls);
+  const spamRules = useQuery(api.tasks.getSpamRules);
   
   const spamStats = {
-    totalSpamBlocked: spamCalls.filter(call => call.status === "blocked").length,
-    spamPercentage: mockData.stats.spamPercentage,
-    activeRules: spamRules.filter(rule => rule.isActive).length,
-    todayBlocked: spamCalls.filter(call => {
+    totalSpamBlocked: spamCalls?.filter(call => call.status === "blocked").length || 0,
+    spamPercentage: 10, // TODO: get from stats
+    activeRules: spamRules?.filter(rule => rule.isActive).length || 0,
+    todayBlocked: spamCalls?.filter(call => {
       const today = new Date();
       const callDate = new Date(call.timestamp);
       return callDate.toDateString() === today.toDateString() && call.status === "blocked";
     }).length,
     avgConfidence: Math.round(
-      spamCalls.filter(call => call.isSpam).reduce((sum, call) => sum + call.confidence, 0) /
-      spamCalls.filter(call => call.isSpam).length
+      (spamCalls?.filter(call => call.isSpam).reduce((sum, call) => sum + call.confidence, 0) || 0) /
+      (spamCalls?.filter(call => call.isSpam).length || 0)
     )
   };
 
   const filteredCalls = spamCalls
-    .filter(call => {
+    ?.filter(call => {
       const matchesSearch = call.phoneNumber.includes(searchTerm);
       const matchesFilter = filterType === "blocked" && call.status === "blocked";
       return matchesSearch && matchesFilter;
     })
-    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    ?.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
   const toggleRule = (ruleId: string) => {
     console.log("Toggling rule:", ruleId);
@@ -176,7 +177,7 @@ export default function SpamManagementPage() {
               />
               <StatCard
                 label="Today Blocked"
-                value={spamStats.todayBlocked}
+                value={spamStats.todayBlocked || 0}
                 icon={<Shield className="w-5 h-5" />}
                 delay={0.4}
               />
@@ -195,11 +196,11 @@ export default function SpamManagementPage() {
               </GlassCardHeader>
               <GlassCardContent>
                 <div className="space-y-3">
-                  {spamRules.map((rule) => (
-                    <div key={rule.id} className="flex items-center justify-between p-4 glass-secondary rounded-lg">
+                  {spamRules?.map((rule) => (
+                    <div key={rule._id.toString()   } className="flex items-center justify-between p-4 glass-secondary rounded-lg">
                       <div className="flex items-center gap-4">
                         <button
-                          onClick={() => toggleRule(rule.id)}
+                          onClick={() => toggleRule(rule._id.toString())}
                           className={`w-6 h-6 rounded flex items-center justify-center ${
                             rule.isActive ? "bg-green-500 text-white" : "bg-gray-300"
                           }`}
@@ -265,8 +266,8 @@ export default function SpamManagementPage() {
               </GlassCardHeader>
               <GlassCardContent>
                 <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {filteredCalls.map((call) => (
-                    <div key={call.id} className="flex items-center justify-between p-4 glass-secondary rounded-lg">
+                  {filteredCalls?.map((call) => (
+                    <div key={call._id} className="flex items-center justify-between p-4 glass-secondary rounded-lg">
                       <div className="flex items-center gap-4">
                         <div className="w-3 h-3 rounded-full bg-red-500" />
                         <div>
@@ -285,10 +286,10 @@ export default function SpamManagementPage() {
                       <div className="flex items-center gap-6">
                         <div className="text-right">
                           <div className="text-sm font-medium">
-                            {call.timestamp.toLocaleDateString()}
+                              {new Date(call.timestamp).toLocaleDateString()}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {call.timestamp.toLocaleTimeString()}
+                            {new Date(call.timestamp).toLocaleTimeString()}
                           </div>
                         </div>
                         
@@ -315,7 +316,7 @@ export default function SpamManagementPage() {
                     </div>
                   ))}
                   
-                  {filteredCalls.length === 0 && (
+                  {filteredCalls?.length === 0 && (
                     <div className="text-center py-8 text-muted-foreground">
                       No spam calls found matching your criteria
                     </div>

@@ -164,17 +164,7 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
                       {item.label}
                     </span>
 
-                    {/* Badge */}
-                    {item.badge && !isCollapsed && (
-                      <span
-                        className="ml-auto bg-energy-orange/20 text-energy-orange px-1.5 py-0.5 rounded text-xs font-medium"
-                        // initial={{ scale: 0 }}
-                        // animate={{ scale: 1 }}
-                        // transition={{ delay: 0.1 }}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
+                    
 
                     {/* Hover glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-trust-blue/10 via-transparent to-energy-orange/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />

@@ -1,6 +1,19 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
+
+interface TableNamesInDataModel {
+  contacts: "contacts";
+  calls: "calls";
+  spamRules: "spamRules";
+  insights: "insights";
+  callStats: "callStats";
+  transcripts: "transcripts";
+  callSummaries: "callSummaries";
+}
+
+type TableNames = keyof TableNamesInDataModel;
+
 // Legacy tasks functions
 export const getTasks = query({
   args: {},
@@ -571,11 +584,11 @@ export const getCallsWithTranscripts = query({
 export const clearAllData = mutation({
   args: {},
   handler: async (ctx) => {
-    const tables = ["contacts", "calls", "spamRules", "insights", "callStats", "transcripts", "callSummaries", "tasks"];
+    const tables: TableNames[] = ["contacts", "calls", "spamRules", "insights", "callStats", "transcripts", "callSummaries"];
     let totalDeleted = 0;
 
     for (const tableName of tables) {
-      const records = await ctx.db.query(tableName as any).collect();
+      const records = await ctx.db.query(tableName).collect();
       for (const record of records) {
         await ctx.db.delete(record._id);
         totalDeleted++;
