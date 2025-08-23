@@ -24,6 +24,11 @@ export default function TestLayout({
                   🏗️ Layout
                 </GlassButton>
               </Link>
+              <Link href="/test/data">
+                <GlassButton variant="trust" size="sm" className="w-full justify-start">
+                  📊 Mock Data
+                </GlassButton>
+              </Link>
               <Link href="/">
                 <GlassButton variant="outline" size="sm" className="w-full justify-start">
                   🏠 Home
