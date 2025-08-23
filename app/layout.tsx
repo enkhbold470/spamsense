@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import { siteConfig, absoluteUrl } from "@/config/siteConfig";
+import { ConvexClientProvider } from "./ConvexClientProvider";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -63,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.className} antialiased`}>
-        {children}
+        <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>
   );

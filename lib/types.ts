@@ -34,6 +34,10 @@ export interface Call {
   carrierInfo?: string;
   action?: CallAction;
   notes?: string;
+  // Transcript and summary references
+  hasTranscript?: boolean;
+  hasSummary?: boolean;
+  transcriptStatus?: "pending" | "processing" | "completed" | "failed";
 }
 
 export interface SpamRule {
@@ -43,6 +47,46 @@ export interface SpamRule {
   isActive: boolean;
   confidence: number;
   description: string;
+}
+
+// New types for transcript and summary functionality
+export interface TranscriptMessage {
+  role: "agent" | "user";
+  response: string;
+  timestamp?: string;
+  confidence?: number; // Speech-to-text confidence
+}
+
+export interface CallTranscript {
+  id: string;
+  callId: string;
+  transcript: TranscriptMessage[];
+  fullTranscript?: string;
+  language?: string;
+  duration?: number; // transcript duration in seconds
+  createdAt: string;
+}
+
+export interface CallIntent {
+  primary: string; // e.g., "sales", "support", "spam", "personal"
+  confidence: number; // 0-100
+  keywords: string[];
+  sentiment: "positive" | "negative" | "neutral";
+  urgency: "low" | "medium" | "high";
+}
+
+export interface CallSummary {
+  id: string;
+  callId: string;
+  transcriptId?: string;
+  summary: string;
+  intent: CallIntent;
+  keyPoints: string[];
+  actionItems?: string[];
+  followUpRequired: boolean;
+  satisfactionScore?: number; // 1-10
+  createdAt: string;
+  aiModel?: string; // Which AI model generated the summary
 }
 
 // Legacy booking types (keeping for backward compatibility)
