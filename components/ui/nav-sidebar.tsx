@@ -127,11 +127,11 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
               const Icon = item.icon
 
               return (
-                <motion.div
+                <div
                   key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                  // initial={{ opacity: 0, x: -20 }}
+                  // animate={{ opacity: 1, x: 0 }}
+                  // transition={{ delay: index * 0.05, duration: 0.3 }}
                 >
                   <Link
                     href={item.href}
@@ -140,10 +140,10 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
                   >
                     {/* Active indicator */}
                     {isActive && (
-                      <motion.div
+                      <div
                         className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-gradient-to-b from-trust-blue to-energy-orange rounded-r-full"
-                        layoutId="activeIndicator"
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        // layoutId="activeIndicator"
+                        // transition={{ duration: 0.3, ease: "easeInOut" }}
                       />
                     )}
                     
@@ -152,42 +152,42 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
                       isActive ? "text-trust-blue" : "text-current"
                     )} />
                     
-                    <motion.span
+                    <span
                       className="truncate"
-                      animate={{ 
-                        opacity: isCollapsed ? 0 : 1,
-                        width: isCollapsed ? 0 : "auto"
-                      }}
-                      transition={{ duration: 0.2 }}
+                      // animate={{ 
+                      //   opacity: isCollapsed ? 0 : 1,
+                      //   width: isCollapsed ? 0 : "auto"
+                      // }}
+                      // transition={{ duration: 0.2 }}
                     >
                       {item.label}
-                    </motion.span>
+                    </span>
 
                     {/* Badge */}
                     {item.badge && !isCollapsed && (
-                      <motion.span
+                      <span
                         className="ml-auto bg-energy-orange/20 text-energy-orange px-1.5 py-0.5 rounded text-xs font-medium"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.1 }}
+                        // initial={{ scale: 0 }}
+                        // animate={{ scale: 1 }}
+                        // transition={{ delay: 0.1 }}
                       >
                         {item.badge}
-                      </motion.span>
+                      </span>
                     )}
 
                     {/* Hover glow effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-trust-blue/10 via-transparent to-energy-orange/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
                   </Link>
-                </motion.div>
+                </div>
               )
             })}
           </nav>
 
           {/* Footer */}
-          <motion.div
+          <div
             className="mt-auto pt-4 border-t border-white/10"
-            animate={{ opacity: isCollapsed ? 0 : 1 }}
-            transition={{ duration: 0.2 }}
+            // animate={{ opacity: isCollapsed ? 0 : 1 }}
+            // transition={{ duration: 0.2 }}
           >
             <Link
               href="/settings"
@@ -199,7 +199,7 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
               <Settings className="w-5 h-5" />
               <span className="truncate">Settings</span>
             </Link>
-          </motion.div>
+          </div>
         </div>
 
         {/* Collapse toggle */}
@@ -209,15 +209,15 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-            <motion.div
-              animate={{ rotate: isCollapsed ? 90 : 0 }}
-              transition={{ duration: 0.2 }}
+            <div
+              // animate={{ rotate: isCollapsed ? 90 : 0 }}
+              // transition={{ duration: 0.2 }}
             >
               {/* <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M15 19l-7-7 7-7" />
               </svg> */}
               <ChevronRight className="w-4 h-4" />
-            </motion.div>
+            </div>
         </motion.button>
       </motion.aside>
     )
