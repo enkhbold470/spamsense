@@ -13,9 +13,11 @@ import {
   Link as LinkIcon,
   Store,
   Target,
-  User
+  User,
+  ChevronRight
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { defaultNavItems } from "@/lib/navItems"
 
 const sidebarVariants = cva(
   "fixed left-0 top-0 z-50 h-screen w-72 glass-primary border-r transition-all duration-300",
@@ -67,16 +69,6 @@ interface NavItem {
   badge?: string | number
 }
 
-const defaultNavItems: NavItem[] = [
-  { label: "Profile", href: "/profile", icon: User },
-  { label: "Referrals", href: "/referrals", icon: LinkIcon },
-  { label: "Maya", href: "/maya", icon: Bot },
-  { label: "Dashboard", href: "/", icon: Home },
-  { label: "Leads", href: "/leads", icon: Target },
-  { label: "Bookings", href: "/bookings", icon: Calendar },
-  { label: "Manage Bookings", href: "/manage", icon: Calendar },
-  { label: "Storefront", href: "/storefront", icon: Store },
-]
 
 interface NavSidebarProps extends VariantProps<typeof sidebarVariants> {
   navItems?: NavItem[]
@@ -212,19 +204,20 @@ const NavSidebar = React.forwardRef<HTMLDivElement, NavSidebarProps>(
 
         {/* Collapse toggle */}
         <motion.button
-          className="absolute -right-3 top-8 w-6 h-6 bg-background border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 z-20"
+          className="absolute right-3 top-8 w-6 h-6 bg-background border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 z-20"
           onClick={() => setIsHovered(!isHovered)}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
         >
-          <motion.div
-            animate={{ rotate: isCollapsed ? 180 : 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </motion.div>
+            <motion.div
+              animate={{ rotate: isCollapsed ? 90 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {/* <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M15 19l-7-7 7-7" />
+              </svg> */}
+              <ChevronRight className="w-4 h-4" />
+            </motion.div>
         </motion.button>
       </motion.aside>
     )
