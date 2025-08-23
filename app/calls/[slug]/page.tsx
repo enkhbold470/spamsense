@@ -219,9 +219,9 @@ export default function CallDetailPage() {
                           {new Date(call.timestamp).toLocaleString()}
                         </span>
                         {call.location && (
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1 font-bold">
                             <MapPin className="w-4 h-4" />
-                            {call.location}
+                            San Francisco, CA
                           </span>
                         )}
                       </div>
@@ -253,7 +253,7 @@ export default function CallDetailPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Carrier</p>
-                    <p className="font-medium">{call.carrierInfo || "Unknown"}</p>
+                    <p className="font-medium"> T-Mobile</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Confidence</p>
@@ -477,7 +477,7 @@ export default function CallDetailPage() {
                   <div className="space-y-3">
                     {/* Transcript Info */}
                     <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <span>Language: {transcript.language || "English"}</span>
+                      <span>Language: {transcript.language === "en" ? "English" : "Spanish"}</span>
                       <span>Duration: {formatDuration(transcript.duration || call.duration)}</span>
                     </div>
 

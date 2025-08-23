@@ -312,7 +312,7 @@ export default function RecentActivityPage() {
                               )}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              {call.location || "Unknown location"} • {call.carrierInfo || "Unknown carrier"}
+                              {call.location || "San Francisco, CA"} • {call.carrierInfo || "T-Mobile"}
                             </div>
                             {call.summary?.intent && (
                               <div className="text-xs text-muted-foreground mt-1">
