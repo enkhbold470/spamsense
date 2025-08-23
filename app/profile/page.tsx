@@ -22,8 +22,8 @@ const sampleUser: UserType = {
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
-    name: "Sarah Johnson",
-    email: "sarah@spamsense.com",
+    name: "Mariana",
+    email: "mariana@spamsense.com",
     phone: "+1-555-0123",
     timezone: "America/New_York"
   });
