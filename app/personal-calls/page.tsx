@@ -148,12 +148,12 @@ export default function PersonalCallsPage() {
                 icon={<Phone className="w-5 h-5" />}
                 delay={0.2}
               />
-              <StatCard
+              {/* <StatCard
                 label="Vector Embeddings"
                 value={personalStats.missedCalls}
                 icon={<AlertCircle className="w-5 h-5" />}
                 delay={0.3}
-              />
+              /> */}
               <StatCard
                 label="Graph-NN Trusted"
                 value={personalStats.whitelistedContacts}

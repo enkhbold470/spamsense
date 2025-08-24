@@ -21,9 +21,14 @@ import type { CallStatus } from "@/lib/convex-types";
 const sampleUser: User = {
   name: "Dr. Sarah Johnson",
   email: "sarah.johnson@spamsense-ai.com",
-  initials: "SJ",
+  initials: "SJ"
+};
+
+// Principal ML Research Engineer specializing in Transformer Architectures & Multi-Agent RL Systems
+const userExpertise = {
   title: "Principal ML Research Engineer",
-  expertise: "Transformer Architectures & Multi-Agent RL Systems"
+  specialization: "Transformer Architectures & Multi-Agent RL Systems",
+  researchFocus: "Neural Spam Detection & Reinforcement Learning"
 };
 
 // Advanced AI/ML Configuration for Spam Detection
