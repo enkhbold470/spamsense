@@ -221,7 +221,7 @@ export default function CallDetailPage() {
                         {call.location && (
                           <span className="flex items-center gap-1 font-bold">
                             <MapPin className="w-4 h-4" />
-                            San Francisco, CA
+                            {call.location || "San Francisco, CA"}
                           </span>
                         )}
                       </div>
@@ -253,7 +253,7 @@ export default function CallDetailPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Carrier</p>
-                    <p className="font-medium"> T-Mobile</p>
+                    <p className="font-medium">{call.carrierInfo || "T-Mobile"}</p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Confidence</p>

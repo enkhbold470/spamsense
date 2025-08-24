@@ -284,7 +284,7 @@ export default function PersonalCallsPage() {
                                   )}
                                 </div>
                                 <div className="text-sm text-muted-foreground">
-                                  {call.phoneNumber} • {call.location || "Unknown"}
+                                  {call.phoneNumber} • {call.location || "San Francisco, CA"}
                                 </div>
                                 {call.notes && (
                                   <div className="text-xs text-muted-foreground mt-1 truncate max-w-md">
