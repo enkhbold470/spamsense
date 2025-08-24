@@ -45,6 +45,7 @@ import type {
   Contact,
   Id
 } from "@/lib/convex-types";
+import { phoneNumberStandardizer } from "@/lib/utils";
 
 const sampleUser: UserType = {
   name: "Mariana Ramirez",
@@ -207,12 +208,12 @@ export default function CallDetailPage() {
                     </div>
                     <div>
                       <GlassCardTitle className="text-xl">
-                        {contact?.name || call.phoneNumber}
+                         {call.type}
                       </GlassCardTitle>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
                         <span className="flex items-center gap-1">
                           <Phone className="w-4 h-4" />
-                          {call.phoneNumber}
+                          {phoneNumberStandardizer(call.phoneNumber)}
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
@@ -221,7 +222,7 @@ export default function CallDetailPage() {
                         {call.location && (
                           <span className="flex items-center gap-1 font-bold">
                             <MapPin className="w-4 h-4" />
-                            {call.location || "San Francisco, CA"}
+                            {"San Francisco, CA"}
                           </span>
                         )}
                       </div>
@@ -231,12 +232,12 @@ export default function CallDetailPage() {
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(call.status)}`}>
                       {call.status}
                     </span>
-                    {call.isSpam && (
+                    {/* {call.isSpam && (
                       <span className="px-3 py-1 rounded-full text-sm font-medium text-red-600 bg-red-500/20 flex items-center gap-1">
                         <Shield className="w-3 h-3" />
                         {call.confidence}% spam
                       </span>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </GlassCardHeader>
@@ -253,11 +254,7 @@ export default function CallDetailPage() {
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm text-muted-foreground">Carrier</p>
-                    <p className="font-medium">{call.carrierInfo || "T-Mobile"}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Confidence</p>
-                    <p className="font-medium">{call.confidence}%</p>
+                    <p className="font-medium">{"T-Mobile"}</p>
                   </div>
                 </div>
                 

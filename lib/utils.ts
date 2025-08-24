@@ -72,3 +72,24 @@ export function formatTime(date: Date | string): string {
     hour12: true,
   }).format(d)
 }
+
+
+
+// make phonenumber into standard spaced
+ export function phoneNumberStandardizer(phoneNumber: string) {
+  // Remove all non-digits first
+  const cleaned = phoneNumber.replace(/\D/g, '');
+  
+  // Format: +1 (XXX) XXX-XXXX
+  if (cleaned.length === 10) {
+    return `+1 (${cleaned.slice(0,3)}) ${cleaned.slice(3,6)}-${cleaned.slice(6)}`;
+  }
+  
+  // Format: +X (XXX) XXX-XXXX for international numbers
+  if (cleaned.length > 10) {
+    return `+${cleaned.slice(0, cleaned.length-10)} (${cleaned.slice(-10,-7)}) ${cleaned.slice(-7,-4)}-${cleaned.slice(-4)}`;
+  }
+  
+  // Return original if format doesn't match
+  return phoneNumber;
+}

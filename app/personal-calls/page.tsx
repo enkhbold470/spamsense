@@ -16,6 +16,7 @@ import {
 } from "@/components/ui";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { phoneNumberStandardizer } from "@/lib/utils";
 import type { 
   User, 
   Call, 
@@ -166,7 +167,7 @@ export default function PersonalCallsPage() {
                         <div key={contact._id} className="flex items-center justify-between p-2 glass-secondary rounded">
                           <div className="flex items-center gap-2">
                             <Star className="w-4 h-4 text-growth-green" />
-                            <span className="font-medium">{contact.name || contact.phoneNumber}</span>
+                            <span className="font-medium">{contact.name || phoneNumberStandardizer(contact.phoneNumber)}</span>
                           </div>
                           <span className="text-sm text-muted-foreground">{contact.callCount} calls</span>
                         </div>
@@ -275,7 +276,7 @@ export default function PersonalCallsPage() {
                               )}
                               <div>
                                 <div className="font-medium flex items-center gap-2">
-                                  {contact?.name || call.phoneNumber}
+                                  {contact?.name || "Personal"}
                                   {call.hasTranscript && (
                                     <MessageSquare className="w-3 h-3 text-trust-blue" />
                                   )}
@@ -284,7 +285,7 @@ export default function PersonalCallsPage() {
                                   )}
                                 </div>
                                 <div className="text-sm text-muted-foreground">
-                                  {call.phoneNumber} • {call.location || "San Francisco, CA"}
+                                  {phoneNumberStandardizer(call.phoneNumber)} • {"San Francisco, CA"}
                                 </div>
                                 {call.notes && (
                                   <div className="text-xs text-muted-foreground mt-1 truncate max-w-md">
