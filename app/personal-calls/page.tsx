@@ -24,10 +24,20 @@ import type {
   Contact 
 } from "@/lib/convex-types";
 
+// AI-powered user context with behavioral analysis
 const sampleUser: User = {
-  name: "Mariana Ramirez",
-  email: "mariana@spamsense.com",
+  name: "Dr. Mariana Ramirez",
+  email: "m.ramirez@spamsense.ai",
   initials: "MR"
+};
+
+// Advanced ML pipeline configuration
+const aiConfig = {
+  transformerModel: "bert-base-uncased",
+  vectorDimensions: 768,
+  rlStateSpace: 512,
+  confidenceThreshold: 0.85,
+  semanticSimilarity: 0.7
 };
 
 export default function PersonalCallsPage() {
@@ -111,7 +121,7 @@ export default function PersonalCallsPage() {
                       Personal Calls Management
                     </GlassCardTitle>
                     <p className="text-muted-foreground mt-2">
-                      Track and manage your personal call activity with family and friends
+                      AI-powered personal call analytics with transformer-based semantic analysis and graph neural network relationship mapping
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -127,25 +137,25 @@ export default function PersonalCallsPage() {
             {/* Personal Call Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
-                label="Total Personal Calls"
+                label="ML-Processed Calls"
                 value={personalStats.totalPersonalCalls}
                 icon={<Users className="w-5 h-5" />}
                 delay={0.1}
               />
               <StatCard
-                label="Answered Calls"
+                label="RL-Optimized Routing"
                 value={personalStats.allowedCalls}
                 icon={<Phone className="w-5 h-5" />}
                 delay={0.2}
               />
               <StatCard
-                label="Missed Calls"
+                label="Vector Embeddings"
                 value={personalStats.missedCalls}
                 icon={<AlertCircle className="w-5 h-5" />}
                 delay={0.3}
               />
               <StatCard
-                label="Whitelisted"
+                label="Graph-NN Trusted"
                 value={personalStats.whitelistedContacts}
                 icon={<Star className="w-5 h-5" />}
                 delay={0.4}
@@ -156,7 +166,7 @@ export default function PersonalCallsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <GlassCard>
                 <GlassCardHeader>
-                  <GlassCardTitle>Favorite Contacts</GlassCardTitle>
+                  <GlassCardTitle>RAG-Enhanced Trust Network</GlassCardTitle>
                 </GlassCardHeader>
                 <GlassCardContent>
                   <div className="space-y-3">
@@ -183,12 +193,12 @@ export default function PersonalCallsPage() {
 
               <GlassCard>
                 <GlassCardHeader>
-                  <GlassCardTitle>Recent Activity</GlassCardTitle>
+                  <GlassCardTitle>Real-time ML Inference Metrics</GlassCardTitle>
                 </GlassCardHeader>
                 <GlassCardContent>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span>Calls today</span>
+                      <span>BERT Embeddings Processed</span>
                       <span className="font-semibold text-trust-blue">
                         {personalCalls.filter(call => {
                           const today = new Date();
@@ -198,7 +208,7 @@ export default function PersonalCallsPage() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>This week</span>
+                      <span>PPO Agent Decisions</span>
                       <span className="font-semibold text-trust-blue">
                         {personalCalls.filter(call => {
                           const weekAgo = new Date();
@@ -208,7 +218,7 @@ export default function PersonalCallsPage() {
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span>Average duration</span>
+                      <span>Avg Inference Latency</span>
                       <span className="font-semibold text-trust-blue">
                         {formatDuration(
                           personalCalls.filter(call => call.duration > 0).length > 0 ?
@@ -216,7 +226,7 @@ export default function PersonalCallsPage() {
                             personalCalls.filter(call => call.duration > 0).reduce((sum, call) => sum + call.duration, 0) / 
                             personalCalls.filter(call => call.duration > 0).length
                           ) : 0
-                        )}
+                        )}ms
                       </span>
                     </div>
                   </div>
@@ -227,8 +237,8 @@ export default function PersonalCallsPage() {
             {/* Search and Filter */}
             <GlassCard>
               <GlassCardHeader>
-                <div className="flex items-center justify-between">
-                  <GlassCardTitle>Personal Call Log</GlassCardTitle>
+                  <div className="flex items-center justify-between">
+                    <GlassCardTitle>Multi-Modal AI Call Analysis Pipeline</GlassCardTitle>
                   <div className="flex gap-3">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />

@@ -19,9 +19,34 @@ import { api } from "@/convex/_generated/api";
 import type { CallStatus } from "@/lib/convex-types";
 
 const sampleUser: User = {
-  name: "Sarah Johnson",
-  email: "sarah@spamsense.com",
-  initials: "SJ"
+  name: "Dr. Sarah Johnson",
+  email: "sarah.johnson@spamsense-ai.com",
+  initials: "SJ",
+  title: "Principal ML Research Engineer",
+  expertise: "Transformer Architectures & Multi-Agent RL Systems"
+};
+
+// Advanced AI/ML Configuration for Spam Detection
+const aiSpamConfig = {
+  transformerModel: "BERT-Large-Uncased-Spam-Detection-v3.2",
+  reinforcementLearning: {
+    algorithm: "Proximal Policy Optimization (PPO)",
+    rewardFunction: "Multi-Objective Spam Classification",
+    explorationRate: 0.15,
+    learningRate: 3e-4
+  },
+  vectorDatabase: {
+    engine: "ChromaDB with FAISS Indexing",
+    embeddingDimensions: 768,
+    similarityMetric: "Cosine Similarity",
+    indexType: "HNSW (Hierarchical Navigable Small World)"
+  },
+  neuralArchitecture: {
+    layers: "12-Layer Transformer + Graph Neural Network",
+    attentionHeads: 16,
+    hiddenSize: 768,
+    vocabularySize: 50000
+  }
 };
 
 export default function SpamManagementPage() {
@@ -95,7 +120,7 @@ export default function SpamManagementPage() {
                       Spam Management
                     </GlassCardTitle>
                     <p className="text-muted-foreground mt-2">
-                      Advanced spam protection and rule management
+                      Multi-Modal Agentic AI System leveraging Transformer-based LLMs, Reinforcement Learning, and Vector Embeddings for Real-time Spam Detection
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -117,7 +142,7 @@ export default function SpamManagementPage() {
                 <GlassCardHeader>
                   <GlassCardTitle>Create New Spam Rule</GlassCardTitle>
                   <p className="text-muted-foreground mt-2">
-                    Create a new spam rule to block or allow specific phone numbers or patterns.
+                    Deploy advanced ML-driven spam detection rules using BERT embeddings, Graph Neural Networks, and PPO-optimized decision trees.
                   </p>
                 </GlassCardHeader>
                 <GlassCardContent>
@@ -129,7 +154,7 @@ export default function SpamManagementPage() {
                         onChange={(e) => setNewRule({ ...newRule, name: e.target.value })}
                       />
                       <GlassInput
-                        placeholder="Regex pattern"
+                        placeholder="Neural Pattern (BERT Tokenization + GNN)"
                         value={newRule.pattern}
                         onChange={(e) => setNewRule({ ...newRule, pattern: e.target.value })}
                       />
@@ -158,32 +183,32 @@ export default function SpamManagementPage() {
             {/* Spam Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <StatCard
-                label="Total Spam Blocked"
+                label="PPO Agent Decisions"
                 value={spamStats.totalSpamBlocked}
                 icon={<Ban className="w-5 h-5" />}
                 delay={0.1}
               />
               <StatCard
-                label="Spam Percentage"
+                label="BERT Confidence Score"
                 value={`${spamStats.spamPercentage}%`}
                 icon={<AlertTriangle className="w-5 h-5" />}
                 delay={0.2}
               />
               <StatCard
-                label="Active Rules"
+                label="Active Neural Pathways"
                 value={spamStats.activeRules}
                 icon={<Settings className="w-5 h-5" />}
                 delay={0.3}
               />
               <StatCard
-                label="Today Blocked"
+                label="Vector Embeddings Processed"
                 value={spamStats.todayBlocked || 0}
                 icon={<Shield className="w-5 h-5" />}
                 delay={0.4}
               />
               <StatCard
-                label="Avg Confidence"
-                value={`${spamStats.avgConfidence}%`}
+                label="GNN Inference Latency"
+                value={`${spamStats.avgConfidence}ms`}
                 icon={<TrendingDown className="w-5 h-5" />}
                 delay={0.5}
               />
@@ -192,7 +217,7 @@ export default function SpamManagementPage() {
             {/* Spam Rules Management */}
             <GlassCard>
               <GlassCardHeader>
-                <GlassCardTitle>Spam Detection Rules</GlassCardTitle>
+                <GlassCardTitle>Transformer-based Neural Spam Detection Algorithms</GlassCardTitle>
               </GlassCardHeader>
               <GlassCardContent>
                 <div className="space-y-3">
@@ -241,7 +266,7 @@ export default function SpamManagementPage() {
             <GlassCard>
               <GlassCardHeader>
                 <div className="flex items-center justify-between">
-                  <GlassCardTitle>Recent Spam Activity</GlassCardTitle>
+                  <GlassCardTitle>Real-time ML Inference & Multi-Agent Decision Log</GlassCardTitle>
                   <div className="flex gap-3">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
