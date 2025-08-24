@@ -215,6 +215,57 @@ export const addCall = mutation({
   },
 });
 
+export const updateCall = mutation({
+  args: {
+    id: v.id("calls"),
+    type: v.optional(v.union(v.literal("personal"), v.literal("business"))),
+    status: v.optional(
+      v.union(
+        v.literal("allowed"),
+        v.literal("blocked"),
+        v.literal("spam"),
+        v.literal("unknown")
+      )
+    ),
+    isSpam: v.optional(v.boolean()),
+    confidence: v.optional(v.number()),
+    location: v.optional(v.string()),
+    carrierInfo: v.optional(v.string()),
+    action: v.optional(
+      v.union(
+        v.literal("allow"),
+        v.literal("block"),
+        v.literal("mark_spam"),
+        v.literal("whitelist")
+      )
+    ),
+    notes: v.optional(v.string()),
+    hasTranscript: v.optional(v.boolean()),
+    hasSummary: v.optional(v.boolean()),
+    transcriptStatus: v.optional(
+      v.union(
+        v.literal("pending"),
+        v.literal("processing"),
+        v.literal("completed"),
+        v.literal("failed")
+      )
+    ),
+  },
+  handler: async (ctx, args) => {
+    const { id, ...updates } = args;
+    
+    // Remove undefined values to avoid overwriting with undefined
+    const cleanUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, value]) => value !== undefined)
+    );
+    
+    await ctx.db.patch(id, cleanUpdates);
+    
+    // Return the updated call
+    return await ctx.db.get(id);
+  },
+});
+
 // Spam Rules queries and mutations
 export const getSpamRules = query({
   args: {},

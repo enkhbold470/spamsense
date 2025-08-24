@@ -114,6 +114,48 @@
               ]
             }
           }
+        },
+        {
+          "name": "Update Call Type",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"type\": \"business\",\n  \"notes\": \"Updated call type from personal to business\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
+            }
+          }
+        },
+        {
+          "name": "Update Call Status and Type",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"type\": \"personal\",\n  \"status\": \"allowed\",\n  \"confidence\": 10,\n  \"notes\": \"Corrected call classification - this was a personal call\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
+            }
+          }
         }
       ]
     },
@@ -318,6 +360,48 @@
                   "value": "invalid-id"
                 }
               ]
+            }
+          }
+        },
+        {
+          "name": "Update Call - Invalid Type",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"callId\": \"{{callId}}\",\n  \"type\": \"invalid_type\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
+            }
+          }
+        },
+        {
+          "name": "Update Call - Missing CallId",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"business\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/calls",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "calls"]
             }
           }
         }

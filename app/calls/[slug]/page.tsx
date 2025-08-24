@@ -95,7 +95,7 @@ export default function CallDetailPage() {
               <XCircle className="w-12 h-12 mx-auto mb-4 text-alert-red" />
               <h3 className="text-lg font-medium mb-2">Call Not Found</h3>
               <p className="text-muted-foreground mb-4">The requested call could not be found.</p>
-              <Link href="/recent-activity">
+              <Link href="/personal-calls">
                 <GlassButton>
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Activity
@@ -174,7 +174,7 @@ export default function CallDetailPage() {
             {/* Header */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Link href="/recent-activity">
+                <Link href="/personal-calls">
                   <GlassButton variant="ghost" className="p-2">
                     <ArrowLeft className="w-5 h-5" />
                   </GlassButton>

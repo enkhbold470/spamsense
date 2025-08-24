@@ -284,30 +284,86 @@ export async function GET(request: NextRequest) {
 
 // PUT method to update existing call
 export async function PUT(request: NextRequest) {
+  console.log("[CALLS API] PUT request received");
+  
   try {
+    console.log("[CALLS API] Parsing request body...");
     const body = await request.json();
+    console.log("[CALLS API] Request body parsed:", JSON.stringify(body, null, 2));
 
     if (!body.callId) {
+      console.log("[CALLS API] Validation failed: Missing callId");
       return NextResponse.json(
         { error: "Missing required field: callId" },
         { status: 400 }
       );
     }
 
+    console.log("[CALLS API] Fetching existing call with ID:", body.callId);
     const callId = body.callId as Id<"calls">;
     const calls = await convex.query(api.tasks.getCalls, {});
     const existingCall = calls.find(c => c._id === callId);
 
     if (!existingCall) {
+      console.log("[CALLS API] Call not found for ID:", callId);
       return NextResponse.json(
         { error: "Call not found" },
         { status: 404 }
       );
     }
 
+    console.log("[CALLS API] Existing call found:", existingCall._id);
+
+    // Validate type if provided
+    if (body.type && !["personal", "business"].includes(body.type)) {
+      console.log("[CALLS API] Validation failed: Invalid type", body.type);
+      return NextResponse.json(
+        { error: "Invalid type: must be 'personal' or 'business'" },
+        { status: 400 }
+      );
+    }
+
+    // Validate status if provided
+    if (body.status && !["allowed", "blocked", "spam", "unknown"].includes(body.status)) {
+      console.log("[CALLS API] Validation failed: Invalid status", body.status);
+      return NextResponse.json(
+        { error: "Invalid status: must be 'allowed', 'blocked', 'spam', or 'unknown'" },
+        { status: 400 }
+      );
+    }
+
+    // Validate confidence if provided
+    if (body.confidence !== undefined && (typeof body.confidence !== "number" || body.confidence < 0 || body.confidence > 100)) {
+      console.log("[CALLS API] Validation failed: Invalid confidence", body.confidence);
+      return NextResponse.json(
+        { error: "Invalid confidence: must be a number between 0 and 100" },
+        { status: 400 }
+      );
+    }
+
+    // Validate action if provided
+    if (body.action && !["allow", "block", "mark_spam", "whitelist"].includes(body.action)) {
+      console.log("[CALLS API] Validation failed: Invalid action", body.action);
+      return NextResponse.json(
+        { error: "Invalid action: must be 'allow', 'block', 'mark_spam', or 'whitelist'" },
+        { status: 400 }
+      );
+    }
+
+    // Validate transcriptStatus if provided
+    if (body.transcriptStatus && !["pending", "processing", "completed", "failed"].includes(body.transcriptStatus)) {
+      console.log("[CALLS API] Validation failed: Invalid transcriptStatus", body.transcriptStatus);
+      return NextResponse.json(
+        { error: "Invalid transcriptStatus: must be 'pending', 'processing', 'completed', or 'failed'" },
+        { status: 400 }
+      );
+    }
+
+    console.log("[CALLS API] All validations passed, preparing update data...");
     // Prepare update data (only include provided fields)
     const updateData: any = {};
     
+    if (body.type) updateData.type = body.type;
     if (body.status) updateData.status = body.status;
     if (body.isSpam !== undefined) updateData.isSpam = body.isSpam;
     if (body.confidence !== undefined) updateData.confidence = body.confidence;
@@ -316,18 +372,30 @@ export async function PUT(request: NextRequest) {
     if (body.hasTranscript !== undefined) updateData.hasTranscript = body.hasTranscript;
     if (body.hasSummary !== undefined) updateData.hasSummary = body.hasSummary;
     if (body.transcriptStatus) updateData.transcriptStatus = body.transcriptStatus;
+    if (body.location !== undefined) updateData.location = body.location;
+    if (body.carrierInfo !== undefined) updateData.carrierInfo = body.carrierInfo;
 
-    // Note: You might need to add an updateCall mutation to tasks.ts
-    // For now, we'll return a success message
+    console.log("[CALLS API] Update data prepared:", JSON.stringify(updateData, null, 2));
+
+    // Call the updateCall mutation
+    console.log("[CALLS API] Calling updateCall mutation...");
+    const updatedCall = await convex.mutation(api.tasks.updateCall, {
+      id: callId,
+      ...updateData
+    });
+
+    console.log("[CALLS API] Call updated successfully:", updatedCall?._id);
     return NextResponse.json({
       success: true,
-      message: "Call update queued (implement updateCall mutation in tasks.ts)"
+      message: "Call updated successfully",
+      call: updatedCall
     });
 
   } catch (error) {
-    console.error("Error updating call:", error);
+    console.error("[CALLS API] Error updating call:", error);
+    console.error("[CALLS API] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
